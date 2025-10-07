@@ -98,7 +98,7 @@ elif pagina == "Bibliografia Italiana":
                     # HTML del box
                     box_html = f"""
                     <div style="
-                        background-color: #f9f9f9;
+                        background-color: #2E2E2E;
                         border-radius: 15px;
                         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                         padding: 15px;
@@ -123,6 +123,7 @@ elif pagina == "Bibliografia Italiana":
                             st.experimental_rerun()
                     else:
                         st.button("✅ Già nella lista", key=f"added_{key_add}", disabled=True)
+
 
 
 
