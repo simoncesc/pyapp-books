@@ -70,7 +70,7 @@ elif pagina == "Bibliografia Italiana":
     case_editrici = ["Tutti"] + sorted(df["Casa Editrice"].dropna().unique().tolist())
 
     autore = st.selectbox("Filtra per autore:", autori)
-    genere = st.selectbox("Filtra per casa editrice:", case_editrici)
+    case_editrici = st.selectbox("Filtra per casa editrice:", case_editrici)
 
     libri_filtrati = df.copy()
     if autore != "Tutti":
@@ -113,4 +113,5 @@ elif pagina == "Bibliografia Italiana":
                             st.experimental_rerun()
                     else:
                         st.button("✅ Già nella lista", key=added_key, disabled=True)
+
 
