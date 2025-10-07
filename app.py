@@ -110,7 +110,7 @@ elif pagina == "Bibliografia Italiana":
                         <p style="color: #555; margin:0;">👤 {autore_row}</p>
                         <p style="color: #777; font-size: 0.9em;">📅 {anno}</p>
                     </div>
-                    ""
+                    """
 
                     st.markdown(box_html, unsafe_allow_html=True)
 
@@ -123,6 +123,7 @@ elif pagina == "Bibliografia Italiana":
                             st.experimental_rerun()
                     else:
                         st.button("✅ Già nella lista", key=f"added_{key_add}", disabled=True)
+
 
 
 
