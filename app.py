@@ -8,7 +8,7 @@ PLACEHOLDER = "https://via.placeholder.com/200x300?text=Nessuna+Immagine"
 # Carica dati da Excel (cache per performance)
 @st.cache_data
 def carica_dati():
-    df = pd.read_excel("libri.xlsx")
+    df = pd.read_excel("Library of Middle Earth.xlsx", sheet_name = "Bibliografia Tolkien Italia")
     # Rimuovi spazi accidentali nei nomi colonne
     df.columns = df.columns.str.strip()
     return df
@@ -16,7 +16,7 @@ def carica_dati():
 df = carica_dati()
 
 # Controllo colonne minime richieste
-required_cols = ["Titolo", "Autore", "Genere", "Anno", "Copertina"]
+required_cols = ["Titolo", "Autore", "Casa Editrice", "Rilegatura", "Prima Edizione", "Lingua", "Copertina"]
 missing = [c for c in required_cols if c not in df.columns]
 if missing:
     st.error(f"Mancano colonne richieste nel file Excel: {missing}. Colonne trovate: {list(df.columns)}")
@@ -27,15 +27,15 @@ if "lista_custom" not in st.session_state:
     st.session_state.lista_custom = []
 
 # Sidebar - navigazione
-pagina = st.sidebar.radio("📚 Naviga tra le pagine", ["Home", "Catalogo libri"])
+pagina = st.sidebar.radio("📚 Naviga tra le pagine", ["Home", "Bibliografia Italiana"])
 
 # -----------------------------
 # HOME
 # -----------------------------
 if pagina == "Home":
-    st.title("📚 Libreria Interattiva")
+    st.title("📚 Tolkien Books Italia")
 
-    st.subheader("Scegli i libri che ti piacciono")
+    st.subheader("Scegli i libri che possiedi")
     libro_scelto = st.selectbox("Seleziona un libro:", df["Titolo"].dropna().unique())
 
     if st.button("➕ Aggiungi alla mia lista"):
@@ -62,21 +62,21 @@ if pagina == "Home":
 # -----------------------------
 # CATALOGO LIBRI
 # -----------------------------
-elif pagina == "Catalogo libri":
+elif pagina == "Bibliografia Italiana":
     st.title("📘 Catalogo dei Libri")
 
     # Filtri (gestire eventuali NaN)
     autori = ["Tutti"] + sorted(df["Autore"].dropna().unique().tolist())
-    generi = ["Tutti"] + sorted(df["Genere"].dropna().unique().tolist())
+    case_editrici = ["Tutti"] + sorted(df["Casa Editrice"].dropna().unique().tolist())
 
     autore = st.selectbox("Filtra per autore:", autori)
-    genere = st.selectbox("Filtra per genere:", generi)
+    genere = st.selectbox("Filtra per casa editrice:", case_editrici)
 
     libri_filtrati = df.copy()
     if autore != "Tutti":
         libri_filtrati = libri_filtrati[libri_filtrati["Autore"] == autore]
-    if genere != "Tutti":
-        libri_filtrati = libri_filtrati[libri_filtrati["Genere"] == genere]
+    if case_editrici != "Tutti":
+        libri_filtrati = libri_filtrati[libri_filtrati["Casa Editrice"] == case_editrici]
 
     # Mostra in griglia
     num_colonne = 3
@@ -113,3 +113,4 @@ elif pagina == "Catalogo libri":
                             st.experimental_rerun()
                     else:
                         st.button("✅ Già nella lista", key=added_key, disabled=True)
+
