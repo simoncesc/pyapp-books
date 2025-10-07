@@ -89,29 +89,40 @@ elif pagina == "Bibliografia Italiana":
             if col_idx < len(chunk):
                 row = chunk.iloc[col_idx]
                 with cols[col_idx]:
-                    # Prendi l'URL della copertina tramite indicizzazione sicura
-                    img_url = row["Copertina"] if pd.notna(row["Copertina"]) and str(row["Copertina"]).strip() else PLACEHOLDER
-                    try:
-                        st.image(img_url, use_container_width=True)
-                    except Exception:
-                        st.image(PLACEHOLDER, use_container_width=True)
-
+                    # Dati del libro
                     titolo = row["Titolo"]
-                    autore_row = row["Autore"] if pd.notna(row["Autore"]) else "Autore sconosciuto"
-                    st.markdown(f"### {titolo}")
-                    st.caption(f"👤 {autore_row}")
+                    autore_row = row["Autore"]
+                    anno = int(row["Prima Edizione"]) if not pd.isna(row["Prima Edizione"]) else "N/D"
+                    img_url = row["Copertina"] if pd.notna(row["Copertina"]) else "https://via.placeholder.com/200x300?text=Nessuna+Immagine"
 
-                    # Key unica per il pulsante (usiamo l'indice assoluto)
-                    abs_index = start + col_idx
-                    add_key = f"add_{abs_index}"
-                    added_key = f"added_{abs_index}"
+                    # HTML del box
+                    box_html = f"""
+                    <div style="
+                        background-color: #f9f9f9;
+                        border-radius: 15px;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        padding: 15px;
+                        text-align: center;
+                        margin-bottom: 20px;
+                    ">
+                        <img src="{img_url}" style="width:180px; height:270px; object-fit:cover; border-radius:10px; margin-bottom:10px;" />
+                        <h4 style="margin-bottom:4px;">{titolo}</h4>
+                        <p style="color: #555; margin:0;">👤 {autore_row}</p>
+                        <p style="color: #777; font-size: 0.9em;">📅 {anno}</p>
+                    </div>
+                    ""
 
+                    st.markdown(box_html, unsafe_allow_html=True)
+
+                    # Pulsante per aggiungere alla lista
+                    key_add = f"add_{start}_{col_idx}"
                     if titolo not in st.session_state.lista_custom:
-                        if st.button("➕ Aggiungi", key=add_key):
+                        if st.button("➕ Aggiungi", key=key_add):
                             st.session_state.lista_custom.append(titolo)
                             st.success("Aggiunto alla tua lista!")
                             st.experimental_rerun()
                     else:
-                        st.button("✅ Già nella lista", key=added_key, disabled=True)
+                        st.button("✅ Già nella lista", key=f"added_{key_add}", disabled=True)
+
 
 
